@@ -1,0 +1,201 @@
+Static Application Security Testing (SAST)
+Dynamic Application Security Testing (DAST)
+Mobile Application Security Testing (MAST)
+Interactive Application Security Testing (IAST)
+
+***Deepcode
+
+工作流:
+(1)插件集成 VSCode
+(2)平台集成 GitHub
+(3)云集成
+(4)公共API或命令行
+(5)Docker容器
+
+***oclint
+
+是否需要单独build源码(不需要)
+
+工作流:
+(1)单文件使用
+oclint [options] <source> -- [compiler flags]
+(2)项目文件使用
+oclint -p <build-path> [other options]  <source0> [... <sourceN>]
+
+***Parasoft
+
+ISO标准
+https://parasoftchina.cn/wp-content/uploads/2015/10/pdf22.pdf
+
+工作流:(确保项目编译，需要编译)
+创建/导入项目->构建配置->运行分析->复审结果，查看报表
+
+***Tscancode
+
+工作流:
+./tscancode --xml func.cpp 2>result.xml
+
+(编译:待定 灰色)
+
+***PVS-studio(不需要编译)
+PVS-Studio -> Check -> Solution
+选择扫描规则->扫描->获取扫描结果
+
+***sonarqube(不需要编译)
+选择代码根目录->新建properties配置信息文件->启动sonarqube服务->sonar-runner
+获取页面bug信息
+
+SQALE Rating
+
+Duplicated blocks
+Failed unit tests
+Insufficient branch coverage by unit tests
+Insufficient comment density
+Insufficient line coverage by unit tests
+Skipped unit tests
+
+***frama-c(不需要编译)
+frama-c-gui -slevel 10 -val first.c
+
+***appscan
+
+
+***facebook infer(需要编译)
+infer -- gcc -c *.c
+
+工作机制:
+捕获阶段->分析阶段
+增量分析
+查看报告
+
+interprocedural复杂程序间静态分析
+checkers程序内分析
+
+***codechecker(需要编译)
+1.集成构建系统
+(1)build
+(2)clean
+(3)log 记录日志
+(4)compilation.json
+
+2.分析代码
+CodeChecker analyze compilation.json -o ./reports 命令行分析
+
+3.生成HTML报告
+4.结果存入数据库
+5.精调分析配置
+
+***klocwork(需要编译,不支持AI)
+
+链接:
+https://www.shdsd.com/pdf/klocwork/klockwork-ebook-static-code-analysis.pdf
+https://www.shdsd.com/pdf/klocwork/whitepaper-klockwork-static-code-analysis-in-agile-world.pdf
+
+差异分析： 
+通过Klocwork Server的系统上下文数据，在整系统已经分析完成后，可以仅分析已更改的文件，提供差异分析结果。这种方式可以尽可能减少分析耗时
+
+易于自动化：
+Klocwork工具有通用的命令行界面，你可以通过REST API访问Klocwork缺陷数据。并且这些数据输出都采用了标准格式，例如XML，JSON和PDF。
+
+容器化构建： 
+Klocwork可以在容器化和云构建的系统中运行，并且支持按需提供机器实例。为能够使用内部云或者外部云服务进行代码分析提供最大限度的灵活性和机会。
+
+定义全局性的或者特定项目的QA、安全目标以及规则配置。
+控制访问权限、审核工作流。
+查看与项目质量和合规性相关的趋势数据、指标数据。
+生成合规性和安全性报告。
+根据严重程度、位置以及所处的声明周期确定缺陷的优先级。
+从遗留代码问题中识别出新问题。
+将积压问题推送到变更控制系统。
+
+#功能点
+
+代码自动检视
+• Memory and resource management
+• Program data management, buffer overflows
+• Unvalidated user input
+• Vulnerable coding practices
+• Concurrency violations
+• Long-term maintenance issues
+
+降低假阳性、假阴性
+
+工作流:
+kwinject -o target.out make
+kwcheck import target.out
+kwcheck run
+
+环境搭建->项目构建make->执行命令->生成报告
+
+***Fortify SCA(需要编译,不支持AI)
+链接:https://www.microfocus.com/documentation/fortify-static-code-analyzer-and-tools/2010/SCA_Guide_20.1.2.pdf
+平台:Windows,Mac,Linux
+内部实现:
+构建集成->代码转译中间格式->中间格式扫描，得到FPR分析结果->转译与分析结果验证
+
+分析器类型:
+Buffer 缓存分析器
+Configuration 配置分析器
+Content 内容分析器
+Control Flow 控制流分析器
+Dataflow 数据流分析器
+Null Pointer 空指针分析器
+Semantic 语义分析器
+Structural 结构分析器
+
+***Coverity(需要编译)
+平台:Windows,Mac.Linux
+链接:https://synopsys.skilljar.com/user-documentation-coverity
+工作流:
+指定项目，选定产品->编译器配置->构建项目并配置(Test Advisor设置)->
+分析(生成测试策略文件)->提交缺陷(Coverity Connect服务器)->结果(检索链接,查看分析结果)
+
+分析引擎:
+路径流程引擎	通过构建一个表示经过每一个函数的所有的路径的图表分析您代码中的每个函数的控制流
+数据追踪引擎	用于分析从程序中每个路径中的声明收集的所有的整型和布尔型等数据
+统计引擎	用于分析您的代码作为一个整体的行为特征
+过程间调用总结引擎	一个主要的创新，使得Prevent 可以执行整个程序的分析，分析文件间和模块间的任何层次的复杂的调用链
+类型流程引擎	用于提高C++分析中依赖于类层次关系的报告的结果的精度
+虚假路径引擎	用于分析每个分支条件，以确定在当前路径它将是真、假或不确定
+加速引擎	保存横越每个路径时的每个缺陷分析所收集的信息；消除冗余路径，不需要横越任何不必要的路径来找到最多的缺陷
+数据传播引擎	把过程间调用总结引擎产生的所有总结和数据追踪引擎记录的所有数据汇总起来，是Coverity特有的、上下文敏感的过程间分析能力的关键
+增量分析引擎	通过缓存分析数据来提高性能，以便后续的分析仅需要包含变化的数据
+
+缺陷:
+并发
+    死锁
+    错误使用的阻塞调用
+性能下降
+    内存泄漏
+    文件句柄泄漏
+    定制的内存和网络资源泄漏
+    数据库连接泄漏
+导致崩溃的缺陷
+    空指针引用
+    释放后引用
+    多次释放
+    不正确的内存分配
+    不匹配的数组新建/删除
+不正确的程序行为
+    逻辑错误导致的死代码
+    未初始化变量
+    负数的无效引用
+不正确的APIs使用
+    STL使用错误
+    API错误处理
+
+安全问题:
+安全编码缺陷
+    缓冲区溢出
+    整形溢出
+    缺失的/不充分的恶意数据和字符串输入的验证
+    格式化字符串的不安全
+    SQL注入攻击
+    交叉站点脚本攻击
+隐含的缺陷
+    整个系统折衷
+    服务拒绝攻击
+    优先权扩张
+    保密数据泄漏
+    数据丢失
+    仲裁代码执行
